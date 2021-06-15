@@ -27,7 +27,7 @@ import pickle
 import roc
 import models
 # from read_data.read_data_aligned_augment import CASIA as CASIA_AUG
-from read_data.read_data import CASIA
+from read_data.read_data_test import CASIA
 from losses import *
 from tools.benchmark import compute_speed, stat
 
@@ -139,7 +139,7 @@ def main():
         model = torch.nn.DataParallel(model, device_ids=args.gpus)
         model.to(device)
 
-    count_params(model)
+    # count_params(model)
     pytorch_total_params = sum(p.numel() for p in model.parameters())
     print('total_params', pytorch_total_params)
 

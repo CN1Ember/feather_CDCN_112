@@ -31,8 +31,11 @@ def cal_metric(target, predicted,show = False, save = False):
         score = y[index] 
         TPRs[key] = float(np.squeeze(score))
         print(score)
-
     auc = roc_auc_score(target, predicted)
+    return scale,eer,TPRs, auc,{'x':scale, 'y':y}
+
+def save_result(scale,show = False,save = False):
+    
     if show:
         plt.plot(scale, y)
         plt.show()
@@ -41,13 +44,25 @@ def cal_metric(target, predicted,show = False, save = False):
         plt.title('ROC')
         plt.xlabel('FPR')
         plt.ylabel('TPR')
-        plt.savefig('./results/roc_1.0_93_best.png')
-    return eer,TPRs, auc,{'x':scale, 'y':y}
+        plt.savefig('./results/feathernet_nir_0615.png')
+    
 
 if __name__ == "__main__":
-   f1 = open('/home/lidaiyuan/feathernet2020/FeatherNet/submission/20210226_2021-02-27_18:01:27_FaceFeatherNet_v3_0_submission_gt.txt','r')
-   f2 = open('/home/lidaiyuan/feathernet2020/FeatherNet/submission/20210226_2021-02-27_18:01:27_FaceFeatherNet_v3_0_submission.txt','r')
+   f1 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:50:33_FaceFeatherNetA_NIR_0_submission_gt.txt','r')
+   f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:50:33_FaceFeatherNetA_NIR_0_submission.txt','r')
    label = [int(i) for i in f1.read().splitlines()]
    pre = [float(i) for i in f2.read().splitlines()]
-   cal_metric(label,pre,False,True)
+   scale_nir,_=cal_metric(label,pre,False,True)
 
+   f1 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:58:29_CDCFeatherNetA_0_submission_gt.txt','r')
+   f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:58:29_CDCFeatherNetA_0_submission.txt','r')
+   label = [int(i) for i in f1.read().splitlines()]
+   pre = [float(i) for i in f2.read().splitlines()]
+   scale_wcdc,_=cal_metric(label,pre,False,True)
+
+   plt.plot(scale_nir, y)
+   plt.plot(scale_wcdc, y)
+   plt.title('ROC')
+   plt.xlabel('FPR')
+   plt.ylabel('TPR')
+   plt.savefig('./results/feathernet_nir_0615.png')

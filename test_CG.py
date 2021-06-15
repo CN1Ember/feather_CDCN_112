@@ -29,7 +29,7 @@ import roc
 import models
 # from read_data.read_data_aligned_augment import CASIA as CASIA_AUG
 # from read_data.read_data_OULU_CDCN import CASIA
-from read_data.read_data import CASIA
+from read_data.read_data_test import CASIA
 from losses import *
 from tools.benchmark import compute_speed, stat
 

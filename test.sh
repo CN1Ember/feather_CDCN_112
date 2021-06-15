@@ -1,5 +1,6 @@
 python test.py \
 --arch=CDCFeatherNetA \
 --config cfgs/blank.yaml \
---phase-test True \
---resume /mnt/cephfs/home/chenguo/code/feather_CDCN_112/checkpoints/CDCFeatherNetA_nir_0613_0.7_32_0.01000_SGD_train_set_21030601_20210307104514_mask_False/_76_best.pth.tar
+--val=True --val-save=True \
+--data_flag 'nir_20210612' \
+--resume /mnt/cephfs/home/chenguo/code/FAS/feathernet2021/feathernet_mine/checkpoints/CDCFeatherNetA_wdistillation_nir_0613_0.7/_161_best.pth.tar
