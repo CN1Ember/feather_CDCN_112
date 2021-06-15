@@ -32,8 +32,8 @@ def cal_metric(target, predicted,show = False, save = False):
         TPRs[key] = float(np.squeeze(score))
         print(score)
     auc = roc_auc_score(target, predicted)
-    return scale,eer,TPRs, auc,{'x':scale, 'y':y}
-
+    return scale,y
+    # return ,eer,TPRs, auc,{'x':scale, 'y':y}
 def save_result(scale,show = False,save = False):
     
     if show:
@@ -52,16 +52,16 @@ if __name__ == "__main__":
    f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:50:33_FaceFeatherNetA_NIR_0_submission.txt','r')
    label = [int(i) for i in f1.read().splitlines()]
    pre = [float(i) for i in f2.read().splitlines()]
-   scale_nir,_=cal_metric(label,pre,False,True)
+   scale_nir , y1 = cal_metric(label,pre,False,True)
 
    f1 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:58:29_CDCFeatherNetA_0_submission_gt.txt','r')
    f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:58:29_CDCFeatherNetA_0_submission.txt','r')
    label = [int(i) for i in f1.read().splitlines()]
    pre = [float(i) for i in f2.read().splitlines()]
-   scale_wcdc,_=cal_metric(label,pre,False,True)
+   scale_wcdc,y2 = cal_metric(label,pre,False,True)
 
-   plt.plot(scale_nir, y)
-   plt.plot(scale_wcdc, y)
+   plt.plot(scale_nir, y1)
+   plt.plot(scale_wcdc, y2)
    plt.title('ROC')
    plt.xlabel('FPR')
    plt.ylabel('TPR')
