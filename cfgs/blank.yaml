@@ -1,0 +1,8 @@
+common:
+    workers: 8
+    epochs: 180
+    policy: "step"
+    base_lr: 0.01
+    momentum: 0.9
+    weight_decay: 0.0001
+    print_freq: 10
