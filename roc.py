@@ -19,7 +19,7 @@ def cal_metric(target, predicted,show = False, save = False):
     _fpr = (fpr)
     tpr = tpr.reshape((tpr.shape[0],1))
     fpr = fpr.reshape((fpr.shape[0],1))
-    scale = np.arange(0, 1, 0.00000001)
+    scale = np.arange(0, 0.1, 0.00001)
     function = interpolate.interp1d(_fpr, _tpr)
     y = function(scale)
     znew = abs(scale + y -1)
@@ -44,25 +44,57 @@ def save_result(scale,show = False,save = False):
         plt.title('ROC')
         plt.xlabel('FPR')
         plt.ylabel('TPR')
-        plt.savefig('./results/feathernet_nir_0615.png')
-    
+        # plt.savefig('./results/feathernet_nir_0615.png')
+
+def plot_one_roc(f1,f2,label_name):
+    # submission_gt,submission,
+    label = [int(i) for i in f1.read().splitlines()]
+    pre = [float(i) for i in f2.read().splitlines()]
+    scale_nir , y1 = cal_metric(label,pre,False,True)
+    plt.plot(scale_nir, y1,label=label_name)    
+
 
 if __name__ == "__main__":
-   f1 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:50:33_FaceFeatherNetA_NIR_0_submission_gt.txt','r')
-   f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:50:33_FaceFeatherNetA_NIR_0_submission.txt','r')
-   label = [int(i) for i in f1.read().splitlines()]
-   pre = [float(i) for i in f2.read().splitlines()]
-   scale_nir , y1 = cal_metric(label,pre,False,True)
+    # 普通feathernet
+    f1 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:50:33_FaceFeatherNetA_NIR_0_submission_gt.txt','r')
+    f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:50:33_FaceFeatherNetA_NIR_0_submission.txt','r')
+    label = [int(i) for i in f1.read().splitlines()]
+    pre = [float(i) for i in f2.read().splitlines()]
+    scale_nir , y1 = cal_metric(label,pre,False,True)
+    plt.plot(scale_nir, y1,label='feathernet')
 
-   f1 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:58:29_CDCFeatherNetA_0_submission_gt.txt','r')
-   f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:58:29_CDCFeatherNetA_0_submission.txt','r')
-   label = [int(i) for i in f1.read().splitlines()]
-   pre = [float(i) for i in f2.read().splitlines()]
-   scale_wcdc,y2 = cal_metric(label,pre,False,True)
+    # with cdc
+    f1 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:58:29_CDCFeatherNetA_0_submission_gt.txt','r')
+    f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:58:29_CDCFeatherNetA_0_submission.txt','r')
+    label = [int(i) for i in f1.read().splitlines()]
+    pre = [float(i) for i in f2.read().splitlines()]
+    scale_wcdc,y2 = cal_metric(label,pre,False,True)
+    plt.plot(scale_wcdc, y2,label="wCDC")
 
-   plt.plot(scale_nir, y1)
-   plt.plot(scale_wcdc, y2)
-   plt.title('ROC')
-   plt.xlabel('FPR')
-   plt.ylabel('TPR')
-   plt.savefig('./results/feathernet_nir_0615.png')
+    # wpws
+    f1 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:52:42_FaceFeatherNetA_PWS_0_submission_gt.txt','r')
+    f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:52:42_FaceFeatherNetA_PWS_0_submission.txt','r')
+    plot_one_roc(f1,f2,'wpws')    
+
+    # wcdc_dislation
+    f1 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:40:41_CDCFeatherNetA_0_submission_gt.txt','r')
+    f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_11:40:41_CDCFeatherNetA_0_submission.txt','r')
+    # plot_one_roc(f1,f2,'wcdc+dislation')
+
+    # wpws_dislation
+    f1 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_12%3A00%3A34_FaceFeatherNet_v3_0_submission_gt.txt','r')
+    f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_12%3A00%3A34_FaceFeatherNet_v3_0_submission.txt','r')
+    # plot_one_roc(f1,f2,'wpws+dislation')
+
+    # resnet
+    f1 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_12%3A13%3A07_resnet18_0_submission_gt.txt','r')
+    f2 = open('/mnt/cephfs/home/chenguo/code/feather_CDCN_112/submission/nir_20210612_2021-06-15_12%3A13%3A07_resnet18_0_submission.txt','r')
+    # plot_one_roc(f1,f2,'resnet')
+
+   
+   
+    plt.title('ROC')
+    plt.xlabel('FPR')
+    plt.ylabel('TPR')
+    plt.legend()
+    plt.savefig('./results/feathernet_nir_0615.png')
